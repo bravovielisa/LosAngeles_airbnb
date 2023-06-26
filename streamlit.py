@@ -9,6 +9,8 @@ import plotly.graph_objects as go
 from PIL import Image #Para poder leer las imagenes jpg
 import base64 #Para el gif
 import io #Para ver la df.info()
+import folium
+from streamlit_folium import st_folium
 #-------------------LIBRERIAS-----------------------#
 
 
@@ -52,9 +54,7 @@ df_out=pd.read_csv('data/price_wo_out_list_d.csv')
 df_30 = df1[df1['minimum_nights']<30]
 host_listings = df_30.groupby(['host_id', 'host_name','neighbourhood_group_cleansed']).size().reset_index(name='num_listings').sort_values(by=['num_listings'], ascending=False)
 hl=host_listings[(host_listings['num_listings']>1) & (host_listings['num_listings']<=5)]
-Min = df_30[df_30['host_id']== '445571173'][['name','host_id', 'host_name', 'latitude', 'longitude']]
-
-
+Min = df_30[df_30['host_id']== 445571173][['name','host_id', 'host_name', 'latitude', 'longitude']]
 
 
 
@@ -65,6 +65,12 @@ sns.heatmap(df.isnull(), yticklabels=False, cbar=False, cmap='Pastel1', ax=ax)
 
 fig1, ax = plt.subplots(figsize=(10, 3))
 sns.heatmap(df1.isnull(), yticklabels=False, cbar=False, cmap='Pastel1', ax=ax)
+
+map2 = folium.Map(location=[34.0725, -118.3018], zoom_start=20)
+for coord in Min.itertuples(index=False):
+    folium.Marker((coord.latitude, coord.longitude), tooltip=coord.name).add_to(map2)
+
+
 
 #--------------------gráficas----------------------------#
 
@@ -236,7 +242,9 @@ elif selected_option == 'Irregularidades':
     st.markdown('''En este dataframe se ha filtrado por aquellos anfitriones que tienen entre 1 y 5 anuncios (por acotar la información).  
                 Seleccionamos por ejemplo al "host" Min que tiene 5 anuncios:''')
     st.dataframe(Min)
-    
-
+    st.markdown('A primera vista se puede comprobar que hay diferentes coordenadas, por lo tanto, se ven ubicaciones diferentes, vamos a verlo en un mapa mejor:')
+    st_data = st_folium(map2, width=725)
+    st.markdown('''Vemos que efectivamente este anfitrión ofrece más de un alojamiento para estancias inferiores a 30 noches. 
+                Por lo que esta persona está incumpliendo con la normativa.''')
 
 #--------------------------------------Irregularidades--------------------------------------#     
