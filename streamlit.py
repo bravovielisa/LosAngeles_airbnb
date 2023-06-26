@@ -117,7 +117,7 @@ elif selected_option == 'Precios':
     with col5:
         st.write(' ')
     def main():
-        
+            
         st.title("Aplicación Power BI")
         powerbi_embed_code = """ <iframe title="Report Section" width="600" height="373.5" src="https://app.powerbi.com/view?r=eyJrIjoiMzYzOTQ5MjAtZTgxMy00ZGMwLTg4MWItYjUwNjE4NzVhZTg0IiwidCI6IjhhZWJkZGI2LTM0MTgtNDNhMS1hMjU1LWI5NjQxODZlY2M2NCIsImMiOjl9" frameborder="0" allowFullScreen="true"></iframe>    """
         st.markdown(powerbi_embed_code, unsafe_allow_html=True)
