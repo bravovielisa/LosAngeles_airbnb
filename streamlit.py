@@ -25,6 +25,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 #opening the image
 image1 = Image.open('img/Airbnb_Logo.svg.png')
 image2 = Image.open('img/Los-Angeles.png')
+image3= Image.open('img/map-los-angeles.jpg')
 
 # gif from local file
 #Gif Info
@@ -111,14 +112,19 @@ if selected_option == 'Inicio':
     #Intro. Para que quedará centrado y pueda editar el texto en según que ocasiones se utiliza lenguaje html:
     st.markdown("""<span style='text-align: center; color: black;'>La ciudad de Los Ángeles, situada en el sur de California (Estados Unidos), es la ciudad que **más multimillonarios alberga**💸.  
                 Ciudad icónica por su letrero de Hollywood alberga los **estudios más fámosos del cine y la televisión** 🎬.  
-                Además de haber sido seleccionada por la diversidad de precios que ofrece esta ciudad en relación a la oferta de alojamientos por Airbnb tiene una **estricta norma**:  
+                </h2>""", unsafe_allow_html=True)
+
+    st.image(image3, width=900)
+
+     
+    st.markdown('''La oferta de alojamientos por Airbnb tiene una **estricta norma**:  
                 *Para hospedar a alguien en plazos inferiores a 30 días se tiene que registrar el alojamiento:  
                 Sólo las residencias principales pueden registrarse. Los anuncios registrados solo pueden alojar hasta 120 días al año natural.  
                 El Ayuntamiento de Los Ángeles define la residencia principal como «la propiedad en la que resides durante más de 6 meses cada año natural».  
                 De acuerdo con las ordenanzas de Los Ángeles, no puedes  
                 1) solicitar u obtener más de un registro o  
                 2) operar más de un anuncio de Airbnb en el momento de la ciudad de Los Ángeles.*  
-                https://www.airbnb.es/help/article/864?_set_bev_on_new_domain=1687464214_ZjI4OWNiNGU2NDIz#section-heading-3-0</h2>""", unsafe_allow_html=True)
+                https://www.airbnb.es/help/article/864?_set_bev_on_new_domain=1687464214_ZjI4OWNiNGU2NDIz#section-heading-3-0''')
     col1, col2, col3 = st.columns(3)
     with col1:
         st.write(' ')
@@ -149,8 +155,6 @@ elif selected_option == 'Preprocesamiento':
     st.pyplot(fig)
     st.markdown('''***Aparecen columnas con el 100% de los valores nulos. Con al menos un 20% aproximadamente hay 21 columnas.  
     Se eliminan las columnas con más de un 18% de valores nulos primero.***''')
-    st.markdown('El dataset nos quedaría con los siguientes valores nulos:')
-    st.pyplot(fig1)
     st.markdown('''Se analizan las variables restantes una por una para ver si es interesante para el análisis o de lo contrario eliminarla del dataset:''')
     code = '''
         # Elimino las columnas con valores nulos que no quiero para nada:
@@ -158,21 +162,23 @@ elif selected_option == 'Preprocesamiento':
   
         #Se rellenan los valores nulos de las variables que si que nos interesan en principio utilizar:
   
-        #Para rellenar variables string/objeto con '?':
         string_columns = df1.select_dtypes(include=['object']).columns.tolist()
         numerical_columns = df1.select_dtypes(include=['int', 'float']).columns.tolist()
+        
+        #Para rellenar variables string/objeto con '?':
         df1[string_columns] = df1[string_columns].fillna('?')
   
         #Para rellenar variables numéricas con 0:
         df1[numerical_columns] = df1[numerical_columns].fillna(0)'''
     st.code(code, language='python')
+    st.pyplot(fig1)
     st.markdown('✨¡Perfecto ya no hay valores nulos!✨')
     
     st.subheader('Valores duplicados')
     code1 = '''df1.duplicated().sum()'''
     st.code(code1, language='python')
     st.markdown('= 0')
-    st.markdown('✨¡Perfecto ya no hay valores duplicados!✨')
+    st.markdown('✨¡Perfecto no hay valores duplicados!✨')
     
     st.subheader('Variables inútiles')
     st.markdown('''En una excel he compiado todas las variables del database con la información relacionada y una vez revisadas he hecho una selección de ellas, por lo tanto, eliminaremos a continuación las que no me parecen interesantes para analizar: ''')
@@ -208,7 +214,7 @@ elif selected_option == 'Preprocesamiento':
     return df
 
     df_out = df1.copy()
-    columna_outliers = 'price'  # Nombre de la columna con outliers
+    columna_outliers = 'price'  
     df_out = outliers_df(df_out, columna_outliers)'''
     st.code(code5, language='python')
     st.dataframe(df_out)
